@@ -20,9 +20,74 @@ namespace LibraryCS.Controllers
         }
 
         // GET: Readers
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string sortOrder,string searchString)
         {
-            return View(await _context.Readers.ToListAsync());
+            ViewData["CurrentFilter"] = searchString;
+
+            ViewData["LNameSortParm"] = String.IsNullOrEmpty(sortOrder) ? "lname_desc" : "";
+            ViewData["NameSortParm"] = sortOrder == "Name" ? "name_desc" : "Name";
+            ViewData["DateSortParm"] = sortOrder == "Date" ? "date_desc" : "Date";
+            ViewData["AgeSortParm"] = sortOrder == "Age" ? "age_desc" : "Age";
+            ViewData["AdressSortParm"] = sortOrder == "Adress" ? "adress_desc" : "Adress";
+            ViewData["PhoneSortParm"] = sortOrder == "Phone" ? "phone_desc" : "Phone";
+            ViewData["PassportSortParm"] = sortOrder == "Passport" ? "passport_desc" : "Passport";
+
+            var readers = from s in _context.Readers
+                           select s;
+            if(!String.IsNullOrEmpty(searchString))
+            {
+                readers = readers.Where(s => s.ReaderName.Contains(searchString) 
+                || s.ReaderLastName.Contains(searchString)
+                || s.Adress.Contains(searchString)
+                || s.Phone.Contains(searchString)
+                || s.Passport.Contains(searchString));
+            }
+            switch (sortOrder)
+            {
+                case "lname_desc":
+                    readers = readers.OrderByDescending(s => s.ReaderLastName);
+                    break;
+                case "Name":
+                    readers = readers.OrderBy(s => s.ReaderName);
+                    break;
+                case "name_desc":
+                    readers = readers.OrderByDescending(s => s.ReaderName);
+                    break;
+                case "Date":
+                    readers = readers.OrderBy(s => s.AddDate);
+                    break;
+                case "date_desc":
+                    readers = readers.OrderByDescending(s => s.AddDate);
+                    break;
+                case "Age":
+                    readers = readers.OrderBy(s => s.Age);
+                    break;
+                case "age_desc":
+                    readers = readers.OrderByDescending(s => s.Age);
+                    break;
+                case "Adress":
+                    readers = readers.OrderBy(s => s.Adress);
+                    break;
+                case "adress_desc":
+                    readers = readers.OrderByDescending(s => s.Adress);
+                    break;
+                case "Phone":
+                    readers = readers.OrderBy(s => s.Phone);
+                    break;
+                case "phone_desc":
+                    readers = readers.OrderByDescending(s => s.Phone);
+                    break;
+                case "Passport":
+                    readers = readers.OrderBy(s => s.Passport);
+                    break;
+                case "passport_desc":
+                    readers = readers.OrderByDescending(s => s.Passport);
+                    break;
+                default:
+                    readers = readers.OrderBy(s => s.ReaderLastName);
+                    break;
+            }
+            return View(await readers.AsNoTracking().ToListAsync());
         }
 
         // GET: Readers/Details/5
@@ -34,6 +99,9 @@ namespace LibraryCS.Controllers
             }
 
             var reader = await _context.Readers
+                .Include(s=>s.Orders)
+                .ThenInclude(e=>e.Book)
+                .AsNoTracking()
                 .FirstOrDefaultAsync(m => m.ID == id);
             if (reader == null)
             {
@@ -54,13 +122,24 @@ namespace LibraryCS.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ID,ReaderName,ReaderLastName,Age,Adress,Phone,Passport,AddDate")] Reader reader)
+        public async Task<IActionResult> Create(
+     [Bind("ReaderName,ReaderLastName,Age,Adress,Phone,Passport,AddDate")] Reader reader)
         {
-            if (ModelState.IsValid)
+            try
             {
-                _context.Add(reader);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                if (ModelState.IsValid)
+                {
+                    _context.Add(reader);
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
+                }
+            }
+            catch (DbUpdateException /* ex */)
+            {
+                //Log the error (uncomment ex variable name and write a log.
+                ModelState.AddModelError("", "Unable to save changes. " +
+                    "Try again, and if the problem persists " +
+                    "see your system administrator.");
             }
             return View(reader);
         }
@@ -74,6 +153,7 @@ namespace LibraryCS.Controllers
             }
 
             var reader = await _context.Readers.FindAsync(id);
+           // var reader = await _context.Readers.SingleOrDefaultAsync(m => m.ID == id);
             if (reader == null)
             {
                 return NotFound();
@@ -117,7 +197,7 @@ namespace LibraryCS.Controllers
         }
 
         // GET: Readers/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        public async Task<IActionResult> Delete(int? id,bool? saveChangesError = false)
         {
             if (id == null)
             {
@@ -125,10 +205,17 @@ namespace LibraryCS.Controllers
             }
 
             var reader = await _context.Readers
+                .AsNoTracking()
                 .FirstOrDefaultAsync(m => m.ID == id);
             if (reader == null)
             {
                 return NotFound();
+            }
+            if (saveChangesError.GetValueOrDefault())
+            {
+                ViewData["ErrorMessage"] =
+                    "Delete failed. Try again, and if the problem persists" +
+                    "see your system administrator.";
             }
 
             return View(reader);
@@ -140,9 +227,24 @@ namespace LibraryCS.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var reader = await _context.Readers.FindAsync(id);
-            _context.Readers.Remove(reader);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            if(reader==null)
+            {
+                return RedirectToAction(nameof(Index));
+            }
+            try
+            {
+                _context.Readers.Remove(reader);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+            catch(DbUpdateException)
+            {
+                ViewData["ErrorMessage"] =
+                    "Delete failed. Try again, and if the problem persists" +
+                    "see your system administrator.";
+                return RedirectToAction(nameof(Delete), new {id, saveChangesError = true });
+
+            }
         }
 
         private bool ReaderExists(int id)
