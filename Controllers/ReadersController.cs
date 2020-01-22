@@ -27,7 +27,7 @@ namespace LibraryCS.Controllers
             int? pageNumber,
             int? pageSize)
         {
-            ViewData["CurrentSort"] = sortOrder;
+            
             ViewData["LNameSortParm"] = String.IsNullOrEmpty(sortOrder) ? "lname_desc" : "";
             ViewData["NameSortParm"] = sortOrder == "Name" ? "name_desc" : "Name";
             ViewData["DateSortParm"] = sortOrder == "Date" ? "date_desc" : "Date";
@@ -35,6 +35,8 @@ namespace LibraryCS.Controllers
             ViewData["AdressSortParm"] = sortOrder == "Adress" ? "adress_desc" : "Adress";
             ViewData["PhoneSortParm"] = sortOrder == "Phone" ? "phone_desc" : "Phone";
             ViewData["PassportSortParm"] = sortOrder == "Passport" ? "passport_desc" : "Passport";
+            ViewData["CurrentSort"] = sortOrder;
+
 
             if (searchString!=null)
             {
