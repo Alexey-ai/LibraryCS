@@ -8,7 +8,6 @@
 
 <p>
     <a asp-action="Create">Create New</a>
-
 </p>
 
 <form asp-action="Index" method="get">
@@ -20,18 +19,6 @@
         </p>
     </div>
 </form>
-
-<form asp-action="Index" method="get">
-    <div class="form-actions no-color">
-        <p>
-            Number of Page: 
-            <input type="text" name="Pagesize" value="@ViewData["PageSize"]" />
-            <input type="submit" value="Use" class="btn btn-default" /> |
-            <a asp-action="Index">Cancel</a>
-        </p>
-    </div>
-</form>
-
 
 <table class="table">
     <thead>

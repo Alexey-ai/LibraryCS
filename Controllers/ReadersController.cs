@@ -20,14 +20,10 @@ namespace LibraryCS.Controllers
         }
 
         // GET: Readers
-        public async Task<IActionResult> Index(
-            string sortOrder,
-            string currentFilter,
-            string searchString,
-            int? pageNumber,
-            int? pageSize)
+        public async Task<IActionResult> Index(string sortOrder,string searchString)
         {
-            ViewData["CurrentSort"] = sortOrder;
+            ViewData["CurrentFilter"] = searchString;
+
             ViewData["LNameSortParm"] = String.IsNullOrEmpty(sortOrder) ? "lname_desc" : "";
             ViewData["NameSortParm"] = sortOrder == "Name" ? "name_desc" : "Name";
             ViewData["DateSortParm"] = sortOrder == "Date" ? "date_desc" : "Date";
@@ -35,18 +31,6 @@ namespace LibraryCS.Controllers
             ViewData["AdressSortParm"] = sortOrder == "Adress" ? "adress_desc" : "Adress";
             ViewData["PhoneSortParm"] = sortOrder == "Phone" ? "phone_desc" : "Phone";
             ViewData["PassportSortParm"] = sortOrder == "Passport" ? "passport_desc" : "Passport";
-
-            if (searchString!=null)
-            {
-                pageNumber = 1;
-            }
-            else
-            {
-                searchString = currentFilter;
-            }
-
-            ViewData["PageSize"] = pageSize;
-            ViewData["CurrentFilter"] = searchString;
 
             var readers = from s in _context.Readers
                            select s;
@@ -103,9 +87,7 @@ namespace LibraryCS.Controllers
                     readers = readers.OrderBy(s => s.ReaderLastName);
                     break;
             }
-
-            //int pageSize = 5;
-            return View(await PaginatedList<Reader>.CreateAsync(readers.AsNoTracking(),pageNumber ?? 1,pageSize ?? 5));
+            return View(await readers.AsNoTracking().ToListAsync());
         }
 
         // GET: Readers/Details/5
