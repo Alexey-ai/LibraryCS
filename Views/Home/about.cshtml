@@ -1,0 +1,37 @@
+﻿@model LibraryCS.Models.LibraryViewModel
+@{
+    ViewData["Title"] = "About";
+}
+<h1>@ViewData["Title"]</h1>
+<table class="table">
+    <thead>
+        <tr>
+    <th>
+        Количество книг:
+    </th>
+    <th>
+        Количество читателей:
+    </th>
+    <th>
+        Прочитано книг:
+    </th>
+    </tr>
+    </thead>
+    <tbody>
+
+        <tr>
+            <td>
+                @Html.DisplayFor(model => model.BooksCount)
+            </td>
+            <td>
+                @Html.DisplayFor(model => model.ReadersCount)
+            </td>
+            <td>
+                @Html.DisplayFor(model => model.OrderCount)
+            </td>
+        </tr>
+</table>
+
+       
+
+ <p>Use this page to view detail library statistic.</p>

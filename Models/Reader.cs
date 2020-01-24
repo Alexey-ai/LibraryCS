@@ -15,6 +15,7 @@ namespace LibraryCS.Models
         public string Adress { get; set; }
         public string Phone { get; set; }
         public string Passport { get; set; }
+        [DataType(DataType.Date)]
         public DateTime AddDate { get; set; }
         public ICollection<Order> Orders { get; set; }
     }

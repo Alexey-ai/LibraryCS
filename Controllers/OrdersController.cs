@@ -65,6 +65,10 @@ namespace LibraryCS.Controllers
             {
                 _context.Add(order);
                 await _context.SaveChangesAsync();
+                var book = await _context.Books.FindAsync(order.BookID);
+                book.Aviability = false;
+                _context.Update(book);
+                await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
             ViewData["BookID"] = new SelectList(_context.Books, "BookID", "BookID", order.BookID);

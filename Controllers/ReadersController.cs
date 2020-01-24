@@ -118,11 +118,13 @@ namespace LibraryCS.Controllers
                 return NotFound();
             }
 
+#pragma warning disable CA2007 // Попробуйте вызвать ConfigureAwait для ожидаемой задачи
             var reader = await _context.Readers
                 .Include(s=>s.Orders)
                 .ThenInclude(e=>e.Book)
                 .AsNoTracking()
                 .FirstOrDefaultAsync(m => m.ID == id);
+#pragma warning restore CA2007 // Попробуйте вызвать ConfigureAwait для ожидаемой задачи
             if (reader == null)
             {
                 return NotFound();
