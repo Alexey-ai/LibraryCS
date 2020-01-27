@@ -22,8 +22,8 @@ namespace LibraryCS.Controllers
         // GET: Orders
         public async Task<IActionResult> Index()
         {
-            var libraryContext = _context.Orders.Include(o => o.Book).Include(o => o.Reader);
-            return View(await libraryContext.ToListAsync());
+            var orders = _context.Orders.Include(o => o.Book).Include(o => o.Reader);
+            return View(await orders.ToListAsync());
         }
 
         // GET: Orders/Details/5

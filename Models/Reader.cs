@@ -9,8 +9,14 @@ namespace LibraryCS.Models
     public class Reader
     {
         public int ID { get; set; }
+
+        [Required][StringLength(30,MinimumLength =2)][RegularExpression(@"^[A-Z]+[a-zA-Z""'\s-]*$")]
         public string ReaderName { get; set; }
+
+        [Required][StringLength(30, MinimumLength = 3)][RegularExpression(@"^[A-Z]+[a-zA-Z""'\s-]*$")]
         public string ReaderLastName { get; set; }
+        
+        [Range(1,100)]
         public int Age { get; set; }
         public string Adress { get; set; }
         public string Phone { get; set; }
@@ -18,5 +24,14 @@ namespace LibraryCS.Models
         [DataType(DataType.Date)]
         public DateTime AddDate { get; set; }
         public ICollection<Order> Orders { get; set; }
+
+        [Display(Name ="Full Name")]
+        public string FullName
+        {
+            get
+            {
+                return ID + "--" + ReaderName + "--" + ReaderLastName;
+            }
+        }
     }
 }
