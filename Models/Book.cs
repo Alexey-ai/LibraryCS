@@ -14,7 +14,7 @@ namespace LibraryCS.Models
         [Required]
         public string NameBook { get; set; }
         [Required]
-        [RegularExpression(@"^[A-Z]+[a-zA-Z""'\s-]*$")]
+        [RegularExpression(@"^[A-Z]+[a-zA-Z""'\s-' ''.']*$")]
         public string Author { get; set; }
         public string Description { get; set; }
         public string Edition { get; set; }
@@ -24,7 +24,7 @@ namespace LibraryCS.Models
 
         [DataType(DataType.Date)]
         public DateTime BookAddDate { get; set; }
-        public Order Order { get; set; }
+        public ICollection<Order> Order { get; set; }
 
         public string FullName
         {

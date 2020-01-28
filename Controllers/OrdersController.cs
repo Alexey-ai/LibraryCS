@@ -49,8 +49,8 @@ namespace LibraryCS.Controllers
         // GET: Orders/Create
         public IActionResult Create()
         {
-            ViewData["BookID"] = new SelectList(_context.Books, "BookID", "BookID");
-            ViewData["ReaderID"] = new SelectList(_context.Readers, "ID", "ID");
+            BookAviableDropDownList();
+            ViewData["ReaderID"] = new SelectList(_context.Readers, "ID", "FullName");
             return View();
         }
 
@@ -89,8 +89,8 @@ namespace LibraryCS.Controllers
             {
                 return NotFound();
             }
-            ViewData["BookID"] = new SelectList(_context.Books, "BookID", "BookID", order.BookID);
-            ViewData["ReaderID"] = new SelectList(_context.Readers, "ID", "ID", order.ReaderID);
+            BookAviableDropDownList();
+            ViewData["ReaderID"] = new SelectList(_context.Readers, "ID", "FullName", order.ReaderID);
             return View(order);
         }
 
@@ -131,6 +131,49 @@ namespace LibraryCS.Controllers
             return View(order);
         }
 
+        public IActionResult CloseOrderList()
+        {
+
+                var orderQuery = from o in _context.Orders.Include(o => o.Book).Include(o => o.Reader)
+                                 orderby o.OrderID
+                                 where o.OrderReturnDate == null
+                                 select o;
+                return View(orderQuery.ToList());
+        }
+        public async Task<IActionResult> CloseOrder(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var order = await _context.Orders.Include(o => o.Book).Include(o => o.Reader).FirstOrDefaultAsync(m => m.OrderID == id);
+            if (order == null)
+            {
+                return NotFound();
+            }
+
+            return View(order);
+        }
+
+        // POST: Orders/Close
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CloseOrder([Bind("OrderID,BookID,ReaderID,OrderDate,OrderReturnDate")] Order order)
+        {
+            if (ModelState.IsValid)
+            {
+                _context.Update(order);
+               await _context.SaveChangesAsync();
+                var book = await _context.Books.FindAsync(order.BookID);
+                book.Aviability = true;
+                _context.Update(book);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+            return View(order);
+        }
+
         // GET: Orders/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
@@ -159,12 +202,38 @@ namespace LibraryCS.Controllers
             var order = await _context.Orders.FindAsync(id);
             _context.Orders.Remove(order);
             await _context.SaveChangesAsync();
+            
+            // возвращаем книгу только если удаляем активный заказ 
+            if (order.OrderReturnDate==null)
+            {
+                var book = await _context.Books.FindAsync(order.BookID);
+                book.Aviability = true;
+                _context.Update(book);
+                await _context.SaveChangesAsync();
+            }
+            
             return RedirectToAction(nameof(Index));
         }
 
         private bool OrderExists(int id)
         {
             return _context.Orders.Any(e => e.OrderID == id);
+        }
+        private void BookAviableDropDownList()
+        {
+            var booksQuery = from b in _context.Books
+                             orderby b.BookID
+                             where b.Aviability != false
+                             select b;
+            ViewData["BookID"] = new SelectList(booksQuery.AsNoTracking(), "BookID", "FullName");
+        }
+        private void BookNotAviableDropDownList()
+        {
+            var booksQuery = from b in _context.Books
+                             orderby b.BookID
+                             where b.Aviability == false
+                             select b;
+            ViewData["BookID"] = new SelectList(booksQuery.AsNoTracking(), "BookID", "FullName");
         }
     }
 }
