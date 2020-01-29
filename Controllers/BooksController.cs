@@ -20,9 +20,72 @@ namespace LibraryCS.Controllers
         }
 
         // GET: Books
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(
+            string sortOrder,
+            string currentFilter,
+            string searchString,
+            int? pageNumber,
+            int? pageSize)
         {
-            return View(await _context.Books.ToListAsync());
+            ViewData["CurrentSort"] = sortOrder;
+            ViewData["BookIDSortParm"] = String.IsNullOrEmpty(sortOrder) ? "BookID_desc" : "";
+            ViewData["NameBookSortParm"] = sortOrder == "NameBook" ? "NameBook_desc" : "NameBook";
+            ViewData["AuthorSortParm"] = sortOrder == "Author" ? "Author_desc" : "Author";
+            ViewData["DescriptionSortParm"] = sortOrder == "Description" ? "Description_desc" : "Description";
+            ViewData["EditionSortParm"] = sortOrder == "Edition" ? "Edition_desc" : "Edition";
+            ViewData["GenreSortParm"] = sortOrder == "Genre" ? "Genre_desc" : "Genre";
+            ViewData["AviabilitySortParm"] = sortOrder == "Aviability" ? "Aviability_desc" : "Aviability";
+            ViewData["DateSortParm"] = sortOrder == "BookAddDate" ? "BookAddDate_desc" : "BookAddDate";
+
+            if (searchString!=null)
+            {
+                pageNumber = 1;
+            }
+            else
+            {
+                searchString = currentFilter;
+            }
+
+            ViewData["CurrentFilter"] = searchString;
+            ViewData["PageSize"] = pageSize;
+
+            var books = from b in _context.Books
+                       select b;
+
+            if(!String.IsNullOrEmpty(searchString))
+            {
+                books = books.Where(b => b.NameBook.Contains(searchString)
+                ||b.Author.Contains(searchString)
+                || b.Description.Contains(searchString)
+                || b.Edition.Contains(searchString)
+                || b.Genre.Contains(searchString)
+                || b.BookID.ToString().Contains(searchString)
+                || b.BookAddDate.ToString().Contains(searchString)
+                );
+            }
+
+            if (String.IsNullOrEmpty(sortOrder))
+            {
+                sortOrder = "BookID";
+            }
+            bool descending = false;
+
+            if (sortOrder.EndsWith("_desc"))
+            {
+                sortOrder = sortOrder.Substring(0, sortOrder.Length - 5);
+                descending = true;
+            }
+
+            if (descending)
+            {
+                books = books.OrderByDescending(b => EF.Property<object>(b, sortOrder));
+            }
+            else
+            {
+                books = books.OrderBy(b => EF.Property<object>(b, sortOrder));
+            }
+
+            return View(await PaginatedList<Book>.CreateAsync(books.AsNoTracking(),pageNumber ?? 1,pageSize ?? 5));
         }
 
         // GET: Books/Details/5

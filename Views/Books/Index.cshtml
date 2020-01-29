@@ -1,44 +1,76 @@
-﻿@model IEnumerable<LibraryCS.Models.Book>
+﻿@using LibraryCS.Data;
+@model PaginatedList<LibraryCS.Models.Book>
 
 @{
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<h1>Book</h1>
 
 <p>
     <a asp-action="Create">Create New</a>
+
 </p>
+
+<form asp-action="Index" method="get" asp-route-pageSize="2">
+    <div class="form-actions no-color">
+        <p>
+            Find: <input type="text" name="SearchString" value="@ViewData["CurrentFilter"]" />
+            <input type="submit" value="Search" class="btn btn-default" asp-route-pageSize="2"/> |
+            <a asp-action="Index">Back to Full List</a>
+        </p>
+    </div>
+</form>
+
+
+<p>
+    Number of Page:
+
+    <a asp-action="Index" class="btn" asp-route-sortOrder="@ViewData["CurrentSort"]" asp-route-currentFilter="@ViewData["CurrentFilter"]" asp-route-pageSize="2">2</a>
+    <a asp-action="Index" class="btn" asp-route-sortOrder="@ViewData["CurrentSort"]" asp-route-currentFilter="@ViewData["CurrentFilter"]" asp-route-pageSize="4">4</a>
+    <a asp-action="Index" class="btn" asp-route-sortOrder="@ViewData["CurrentSort"]" asp-route-currentFilter="@ViewData["CurrentFilter"]" asp-route-pageSize="6">6</a>
+    <a asp-action="Index" class="btn" asp-route-sortOrder="@ViewData["CurrentSort"]" asp-route-currentFilter="@ViewData["CurrentFilter"]" asp-route-pageSize="12">12</a>
+</p>
+
+
+
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.NameBook)
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["BookIDSortParm"]" asp-route-pageSize="@ViewData["PageSize"]" asp-route-currentFilter="@ViewData["currentFilter"]">ID</a>
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Author)
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["NameBookSortParm"]" asp-route-pageSize="@ViewData["PageSize"]" asp-route-currentFilter="@ViewData["currentFilter"]">NameBook</a>
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Description)
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["AuthorSortParm"]" asp-route-pageSize="@ViewData["PageSize"]" asp-route-currentFilter="@ViewData["currentFilter"]"> Author </a>
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Edition)
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["DescriptionSortParm"]" asp-route-pageSize="@ViewData["PageSize"]" asp-route-currentFilter="@ViewData["currentFilter"]">Description</a>
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Genre)
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["EditionSortParm"]" asp-route-pageSize="@ViewData["PageSize"]" asp-route-currentFilter="@ViewData["currentFilter"]">Edition</a>
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Aviability)
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["GenreSortParm"]" asp-route-pageSize="@ViewData["PageSize"]" asp-route-currentFilter="@ViewData["currentFilter"]">Genre</a>
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.BookAddDate)
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["AviabilitySortParm"]" asp-route-pageSize="@ViewData["PageSize"]" asp-route-currentFilter="@ViewData["currentFilter"]">Aviability</a>
+            </th>
+            <th>
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["DateSortParm"]" asp-route-pageSize="@ViewData["PageSize"]" asp-route-currentFilter="@ViewData["currentFilter"]">DateSort</a>
             </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
+        @foreach (var item in Model)
+        {
         <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.BookID)
+            </td>
             <td>
                 @Html.DisplayFor(modelItem => item.NameBook)
             </td>
@@ -66,6 +98,27 @@
                 <a asp-action="Delete" asp-route-id="@item.BookID">Delete</a>
             </td>
         </tr>
-}
+        }
     </tbody>
 </table>
+@{
+    var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
+    var nextDisabled = !Model.HasNextPage ? "disabled" : "";
+}
+
+<a asp-action="Index"
+   asp-route-sortOrder="@ViewData["CurrentSort"]"
+   asp-route-pageSize="@ViewData["PageSize"]"
+   asp-route-pageNumber="@(Model.PageIndex - 1)"
+   asp-route-currentFilter="@ViewData["CurrentFilter"]"
+   class="btn btn-default @prevDisabled">
+    Previous
+</a>
+<a asp-action="Index"
+   asp-route-sortOrder="@ViewData["CurrentSort"]"
+   asp-route-pageSize="@ViewData["PageSize"]"
+   asp-route-pageNumber="@(Model.PageIndex + 1)"
+   asp-route-currentFilter="@ViewData["CurrentFilter"]"
+   class="btn btn-default @nextDisabled">
+    Next
+</a>
