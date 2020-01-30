@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
+using LibraryCS.Areas.Identity.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -13,13 +14,13 @@ namespace LibraryCS.Areas.Identity.Pages.Account.Manage
 {
     public partial class IndexModel : PageModel
     {
-        private readonly UserManager<IdentityUser> _userManager;
-        private readonly SignInManager<IdentityUser> _signInManager;
+        private readonly UserManager<LibraryUser> _userManager;
+        private readonly SignInManager<LibraryUser> _signInManager;
         private readonly IEmailSender _emailSender;
 
         public IndexModel(
-            UserManager<IdentityUser> userManager,
-            SignInManager<IdentityUser> signInManager,
+            UserManager<LibraryUser> userManager,
+            SignInManager<LibraryUser> signInManager,
             IEmailSender emailSender)
         {
             _userManager = userManager;
@@ -28,6 +29,8 @@ namespace LibraryCS.Areas.Identity.Pages.Account.Manage
         }
 
         public string Username { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
 
         public bool IsEmailConfirmed { get; set; }
 
@@ -43,9 +46,17 @@ namespace LibraryCS.Areas.Identity.Pages.Account.Manage
             [EmailAddress]
             public string Email { get; set; }
 
+            [Display(Name = "FirstName")]
+            public string FirstName { get; set; }
+            
+            [Display(Name = "LastName")]
+            public string LastName { get; set; }
+
+
             [Phone]
             [Display(Name = "Phone number")]
             public string PhoneNumber { get; set; }
+            public string Hash { get; set; }
         }
 
         public async Task<IActionResult> OnGetAsync()
@@ -57,6 +68,9 @@ namespace LibraryCS.Areas.Identity.Pages.Account.Manage
             }
 
             var userName = await _userManager.GetUserNameAsync(user);
+            var firstName = user.FirstName;
+            var lastName = user.LastName;
+            var hash = user.PasswordHash;
             var email = await _userManager.GetEmailAsync(user);
             var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
 
@@ -65,7 +79,10 @@ namespace LibraryCS.Areas.Identity.Pages.Account.Manage
             Input = new InputModel
             {
                 Email = email,
-                PhoneNumber = phoneNumber
+                PhoneNumber = phoneNumber,
+                FirstName=firstName,
+                LastName=lastName,
+                Hash=hash
             };
 
             IsEmailConfirmed = await _userManager.IsEmailConfirmedAsync(user);

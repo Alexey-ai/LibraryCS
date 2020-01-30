@@ -13,6 +13,7 @@ using Microsoft.EntityFrameworkCore;
 using LibraryCS.Data;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using LibraryCS.Areas.Identity.Data;
 
 namespace LibraryCS
 {
@@ -37,7 +38,7 @@ namespace LibraryCS
 
             services.AddDbContext<LibraryAuthContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("LibraryIdentityDB")));
-            services.AddDefaultIdentity<IdentityUser>()
+            services.AddDefaultIdentity<LibraryUser>()
                 .AddDefaultUI(UIFramework.Bootstrap4)
                 .AddEntityFrameworkStores<LibraryAuthContext>();
 

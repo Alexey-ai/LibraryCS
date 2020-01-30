@@ -1,4 +1,5 @@
 ﻿using System;
+using LibraryCS.Areas.Identity.Data;
 using LibraryCS.Data;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -15,6 +16,10 @@ namespace LibraryCS.Areas.Identity
         public void Configure(IWebHostBuilder builder)
         {
             builder.ConfigureServices((context, services) => {
+
+               // services.AddDefaultIdentity<LibraryUser>()
+               //     .AddDefaultUI(UIFramework.Bootstrap4)
+               //     .AddEntityFrameworkStores<LibraryAuthContext>();
             });
         }
     }
