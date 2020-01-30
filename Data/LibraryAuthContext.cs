@@ -6,9 +6,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace LibraryCS.Data
 {
-    public class ApplicationDbContext : IdentityDbContext
+    public class LibraryAuthContext : IdentityDbContext
     {
-        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
+        public LibraryAuthContext(DbContextOptions<LibraryAuthContext> options)
             : base(options)
         {
         }
