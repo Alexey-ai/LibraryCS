@@ -40,10 +40,12 @@ namespace LibraryCS.Areas.Identity.Pages.Account
 
         public class InputModel
         {
-            [Required]            
+            [Required]
+            [StringLength(100,ErrorMessage ="The{0} must be at least {2} and at max{1} characters long.",MinimumLength = 1)]
             [Display(Name = "FirstName")]
             public string FirstName { get; set; }
             [Required]
+            [StringLength(100, ErrorMessage = "The{0} must be at least {2} and at max{1} characters long.", MinimumLength = 1)]
             [Display(Name = "LastName")]
             public string LastName { get; set; }
 
@@ -62,6 +64,7 @@ namespace LibraryCS.Areas.Identity.Pages.Account
             [Display(Name = "Confirm password")]
             [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
             public string ConfirmPassword { get; set; }
+            public bool IsAdmin { get; set; }
         }
 
         public void OnGet(string returnUrl = null)
@@ -74,11 +77,20 @@ namespace LibraryCS.Areas.Identity.Pages.Account
             returnUrl = returnUrl ?? Url.Content("~/");
             if (ModelState.IsValid)
             {
-                var user = new LibraryUser {UserName=Input.Email, FirstName = Input.FirstName,LastName=Input.LastName,Email = Input.Email };
+                var user = new LibraryUser 
+                {
+                    UserName=Input.Email,
+                    FirstName = Input.FirstName,
+                    LastName=Input.LastName,
+                    Email = Input.Email,
+                    IsAdmin = Input.IsAdmin
+                };
                 var result = await _userManager.CreateAsync(user, Input.Password);
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User created a new account with password.");
+                    
+                    await _userManager.AddClaimAsync(user, new System.Security.Claims.Claim("IsAdmin",true.ToString()));
 
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                     var callbackUrl = Url.Page(

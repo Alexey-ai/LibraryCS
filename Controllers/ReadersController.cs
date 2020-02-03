@@ -7,12 +7,15 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using LibraryCS.Data;
 using LibraryCS.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace LibraryCS.Controllers
 {
+    [Authorize]
     public class ReadersController : Controller
     {
         private readonly LibraryContext _context;
+        public bool IsAdmin => HttpContext.User.HasClaim("IsAdmin", bool.TrueString);
 
         public ReadersController(LibraryContext context)
         {

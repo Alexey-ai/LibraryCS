@@ -46,9 +46,14 @@ namespace LibraryCS.Areas.Identity.Pages.Account.Manage
             [EmailAddress]
             public string Email { get; set; }
 
+            [Required]
+            [StringLength(100, ErrorMessage = "The{0} must be at least {2} and at max{1} characters long.", MinimumLength = 1)]
             [Display(Name = "FirstName")]
             public string FirstName { get; set; }
-            
+
+
+            [Required]
+            [StringLength(100, ErrorMessage = "The{0} must be at least {2} and at max{1} characters long.", MinimumLength = 1)]
             [Display(Name = "LastName")]
             public string LastName { get; set; }
 
@@ -68,9 +73,6 @@ namespace LibraryCS.Areas.Identity.Pages.Account.Manage
             }
 
             var userName = await _userManager.GetUserNameAsync(user);
-            var firstName = user.FirstName;
-            var lastName = user.LastName;
-            var hash = user.PasswordHash;
             var email = await _userManager.GetEmailAsync(user);
             var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
 
@@ -80,9 +82,9 @@ namespace LibraryCS.Areas.Identity.Pages.Account.Manage
             {
                 Email = email,
                 PhoneNumber = phoneNumber,
-                FirstName=firstName,
-                LastName=lastName,
-                Hash=hash
+                FirstName=user.FirstName,
+                LastName=user.LastName,
+                Hash=user.PasswordHash
             };
 
             IsEmailConfirmed = await _userManager.IsEmailConfirmedAsync(user);
@@ -102,6 +104,9 @@ namespace LibraryCS.Areas.Identity.Pages.Account.Manage
             {
                 return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
             }
+            user.FirstName = Input.FirstName;
+            user.LastName = Input.LastName;
+            await _userManager.UpdateAsync(user);
 
             var email = await _userManager.GetEmailAsync(user);
             if (Input.Email != email)

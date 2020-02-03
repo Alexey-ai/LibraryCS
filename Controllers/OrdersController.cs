@@ -7,13 +7,18 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using LibraryCS.Data;
 using LibraryCS.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace LibraryCS.Controllers
 {
+    [Authorize]
     public class OrdersController : Controller
     {
         private readonly LibraryContext _context;
+        public bool IsAdmin => HttpContext.User.HasClaim("IsAdmin", bool.TrueString);
 
+        //public bool IsAdmin => HttpContext.User.Identity.IsAuthenticated;
+        
         public OrdersController(LibraryContext context)
         {
             _context = context;
@@ -49,6 +54,10 @@ namespace LibraryCS.Controllers
         // GET: Orders/Create
         public IActionResult Create()
         {
+            if (!IsAdmin)
+            {
+                return Forbid();
+            }
             BookAviableDropDownList();
             ViewData["ReaderID"] = new SelectList(_context.Readers, "ID", "FullName");
             return View();
@@ -82,6 +91,10 @@ namespace LibraryCS.Controllers
             if (id == null)
             {
                 return NotFound();
+            }
+            if (!IsAdmin)
+            {
+                return Forbid();
             }
 
             var order = await _context.Orders.FindAsync(id);
@@ -133,8 +146,12 @@ namespace LibraryCS.Controllers
 
         public IActionResult CloseOrderList()
         {
+            if (!IsAdmin)
+            {
+                return Forbid();
+            }
 
-                var orderQuery = from o in _context.Orders.Include(o => o.Book).Include(o => o.Reader)
+            var orderQuery = from o in _context.Orders.Include(o => o.Book).Include(o => o.Reader)
                                  orderby o.OrderID
                                  where o.OrderReturnDate == null
                                  select o;
@@ -145,6 +162,10 @@ namespace LibraryCS.Controllers
             if (id == null)
             {
                 return NotFound();
+            }
+            if (!IsAdmin)
+            {
+                return Forbid();
             }
 
             var order = await _context.Orders.Include(o => o.Book).Include(o => o.Reader).FirstOrDefaultAsync(m => m.OrderID == id);
@@ -180,6 +201,10 @@ namespace LibraryCS.Controllers
             if (id == null)
             {
                 return NotFound();
+            }
+            if (!IsAdmin)
+            {
+                return Forbid();
             }
 
             var order = await _context.Orders

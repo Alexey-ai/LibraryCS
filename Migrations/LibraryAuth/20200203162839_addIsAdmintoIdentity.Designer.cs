@@ -4,14 +4,16 @@ using LibraryCS.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace LibraryCS.Migrations.LibraryAuth
 {
     [DbContext(typeof(LibraryAuthContext))]
-    partial class LibraryAuthContextModelSnapshot : ModelSnapshot
+    [Migration("20200203162839_addIsAdmintoIdentity")]
+    partial class addIsAdmintoIdentity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
