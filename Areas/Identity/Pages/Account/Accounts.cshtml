@@ -1,0 +1,48 @@
+﻿@page
+@model IndexViewModel
+
+@{ 
+    ViewData["Title"] = "Index";
+}
+    <h1>Users</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    Имя
+                </th>
+                <th>
+                    Фамилия
+                </th>
+                <th>
+                    Администратор
+                </th>
+                <th>
+                    Password Hash
+                </th>
+
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.LibraryUsers)
+            {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FirstName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.LastName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.IsAdmin)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PasswordHash)
+                </td>
+
+            </tr>
+            }
+        </tbody>
+    </table>
