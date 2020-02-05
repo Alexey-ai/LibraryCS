@@ -5,10 +5,10 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Book</h1>
+<h1>Книги</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create">Добавить новую книгу</a>
 
 </p>
 
@@ -24,7 +24,7 @@
 
 
 <p>
-    Number of Page:
+    Количество книг на странице:
 
     <a asp-action="Index" class="btn" asp-route-sortOrder="@ViewData["CurrentSort"]" asp-route-currentFilter="@ViewData["CurrentFilter"]" asp-route-pageSize="2">2</a>
     <a asp-action="Index" class="btn" asp-route-sortOrder="@ViewData["CurrentSort"]" asp-route-currentFilter="@ViewData["CurrentFilter"]" asp-route-pageSize="4">4</a>
@@ -93,9 +93,9 @@
                 @Html.DisplayFor(modelItem => item.BookAddDate)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.BookID">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.BookID">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.BookID">Delete</a>
+                <a asp-action="Edit" asp-route-id="@item.BookID">Изменить</a> |
+                <a asp-action="Details" asp-route-id="@item.BookID">Детали</a> |
+                <a asp-action="Delete" asp-route-id="@item.BookID">Удалить</a>
             </td>
         </tr>
         }
