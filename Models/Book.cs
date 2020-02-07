@@ -9,7 +9,6 @@ namespace LibraryCS.Models
 {
     public class Book
     {
-        [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int BookID { get; set; }
         [Required]
         public string NameBook { get; set; }
@@ -25,6 +24,7 @@ namespace LibraryCS.Models
         [DataType(DataType.Date)]
         public DateTime BookAddDate { get; set; }
         public ICollection<Order> Order { get; set; }
+        public ICollection<FileModel> FileModels { get; set; }
 
         public string FullName
         {

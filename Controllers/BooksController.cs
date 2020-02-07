@@ -3,20 +3,28 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using LibraryCS.Data;
 using LibraryCS.Models;
+using System.IO;
+using Microsoft.AspNetCore.Hosting;
+
+
 
 namespace LibraryCS.Controllers
 {
     public class BooksController : Controller
     {
         private readonly LibraryContext _context;
+        private IHostingEnvironment _appEnvironment;
+        //private readonly IWebHostEnviroment _webHostEnviroment;
 
-        public BooksController(LibraryContext context)
+        public BooksController(LibraryContext context,IHostingEnvironment appEnvironment)
         {
             _context = context;
+            _appEnvironment = appEnvironment;
         }
 
         // GET: Books
@@ -87,7 +95,28 @@ namespace LibraryCS.Controllers
 
             return View(await PaginatedList<Book>.CreateAsync(books.AsNoTracking(),pageNumber ?? 1,pageSize ?? 5));
         }
-
+        
+        // GET:Files
+        public IActionResult Files()
+        {
+            return View(_context.Files.ToList());
+        }
+        [HttpPost]
+        public async Task<IActionResult> AddFile(IFormFile uploadedFile)
+        {
+            if (uploadedFile!=null)
+            {
+                string path = "/Files/" + uploadedFile.FileName;
+                using(var fileStream = new FileStream(_appEnvironment.WebRootPath+path,FileMode.Create))
+                {
+                    await uploadedFile.CopyToAsync(fileStream);
+                }
+                FileModel file = new FileModel { Name = uploadedFile.FileName, Path = path };
+                _context.Files.Add(file);
+                _context.SaveChanges();
+            }
+            return RedirectToAction("Files");
+        }
         // GET: Books/Details/5
         public async Task<IActionResult> Details(int? id)
         {
