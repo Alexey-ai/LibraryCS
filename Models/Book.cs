@@ -20,11 +20,11 @@ namespace LibraryCS.Models
         public string Genre { get; set; }
 
         public bool Aviability { get; set; }
+        public string BookPicturesPath { get; set; }
 
         [DataType(DataType.Date)]
         public DateTime BookAddDate { get; set; }
         public ICollection<Order> Order { get; set; }
-        public ICollection<FileModel> FileModels { get; set; }
 
         public string FullName
         {

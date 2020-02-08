@@ -95,28 +95,8 @@ namespace LibraryCS.Controllers
 
             return View(await PaginatedList<Book>.CreateAsync(books.AsNoTracking(),pageNumber ?? 1,pageSize ?? 5));
         }
-        
-        // GET:Files
-        public IActionResult Files()
-        {
-            return View(_context.Files.ToList());
-        }
-        [HttpPost]
-        public async Task<IActionResult> AddFile(IFormFile uploadedFile)
-        {
-            if (uploadedFile!=null)
-            {
-                string path = "/Files/" + uploadedFile.FileName;
-                using(var fileStream = new FileStream(_appEnvironment.WebRootPath+path,FileMode.Create))
-                {
-                    await uploadedFile.CopyToAsync(fileStream);
-                }
-                FileModel file = new FileModel { Name = uploadedFile.FileName, Path = path };
-                _context.Files.Add(file);
-                _context.SaveChanges();
-            }
-            return RedirectToAction("Files");
-        }
+       
+
         // GET: Books/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -148,8 +128,10 @@ namespace LibraryCS.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("NameBook,Author,Description,Edition,Genre,Aviability,BookAddDate")] Book book)
         {
+            
             if (ModelState.IsValid)
             {
+                book.BookPicturesPath = "/Files/noimage.png";
                 _context.Add(book);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -178,7 +160,7 @@ namespace LibraryCS.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("BookID,NameBook,Author,Description,Edition,Genre,Aviability,BookAddDate")] Book book)
+        public async Task<IActionResult> Edit(int id, [Bind("BookID,NameBook,Author,Description,Edition,Genre,Aviability,BookAddDate,BookPicturesPath")] Book book)
         {
             if (id != book.BookID)
             {

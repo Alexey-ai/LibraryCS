@@ -20,8 +20,7 @@ namespace LibraryCS.Data
         {
             modelBuilder.Entity<Book>().ToTable("Book");
             modelBuilder.Entity<Order>().ToTable("Order");
-            modelBuilder.Entity<Reader>().ToTable("Reader");
-           // modelBuilder.Entity<FileModel>().ToTable("File");
+            modelBuilder.Entity<Reader>().ToTable("Reader");           
         }
     }
 }
