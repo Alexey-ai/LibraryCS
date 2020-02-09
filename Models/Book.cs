@@ -9,7 +9,6 @@ namespace LibraryCS.Models
 {
     public class Book
     {
-        [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int BookID { get; set; }
         [Required]
         public string NameBook { get; set; }
@@ -21,6 +20,7 @@ namespace LibraryCS.Models
         public string Genre { get; set; }
 
         public bool Aviability { get; set; }
+        public string BookPicturesPath { get; set; }
 
         [DataType(DataType.Date)]
         public DateTime BookAddDate { get; set; }

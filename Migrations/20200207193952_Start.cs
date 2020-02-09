@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace LibraryCS.Migrations
 {
-    public partial class InitialCreate : Migration
+    public partial class Start : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -12,9 +12,10 @@ namespace LibraryCS.Migrations
                 name: "Book",
                 columns: table => new
                 {
-                    BookID = table.Column<int>(nullable: false),
-                    NameBook = table.Column<string>(nullable: true),
-                    Author = table.Column<string>(nullable: true),
+                    BookID = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    NameBook = table.Column<string>(nullable: false),
+                    Author = table.Column<string>(nullable: false),
                     Description = table.Column<string>(nullable: true),
                     Edition = table.Column<string>(nullable: true),
                     Genre = table.Column<string>(nullable: true),
@@ -32,8 +33,8 @@ namespace LibraryCS.Migrations
                 {
                     ID = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    ReaderName = table.Column<string>(nullable: true),
-                    ReaderLastName = table.Column<string>(nullable: true),
+                    ReaderName = table.Column<string>(maxLength: 30, nullable: false),
+                    ReaderLastName = table.Column<string>(maxLength: 30, nullable: false),
                     Age = table.Column<int>(nullable: false),
                     Adress = table.Column<string>(nullable: true),
                     Phone = table.Column<string>(nullable: true),
@@ -43,6 +44,34 @@ namespace LibraryCS.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Reader", x => x.ID);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Files",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    Name = table.Column<string>(nullable: true),
+                    Path = table.Column<string>(nullable: true),
+                    BookID = table.Column<int>(nullable: true),
+                    ReaderID = table.Column<int>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Files", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Files_Book_BookID",
+                        column: x => x.BookID,
+                        principalTable: "Book",
+                        principalColumn: "BookID",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Files_Reader_ReaderID",
+                        column: x => x.ReaderID,
+                        principalTable: "Reader",
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -74,10 +103,19 @@ namespace LibraryCS.Migrations
                 });
 
             migrationBuilder.CreateIndex(
+                name: "IX_Files_BookID",
+                table: "Files",
+                column: "BookID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Files_ReaderID",
+                table: "Files",
+                column: "ReaderID");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Order_BookID",
                 table: "Order",
-                column: "BookID",
-                unique: true);
+                column: "BookID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Order_ReaderID",
@@ -87,6 +125,9 @@ namespace LibraryCS.Migrations
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "Files");
+
             migrationBuilder.DropTable(
                 name: "Order");
 

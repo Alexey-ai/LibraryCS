@@ -3,20 +3,28 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using LibraryCS.Data;
 using LibraryCS.Models;
+using System.IO;
+using Microsoft.AspNetCore.Hosting;
+
+
 
 namespace LibraryCS.Controllers
 {
     public class BooksController : Controller
     {
         private readonly LibraryContext _context;
+        private IHostingEnvironment _appEnvironment;
+        //private readonly IWebHostEnviroment _webHostEnviroment;
 
-        public BooksController(LibraryContext context)
+        public BooksController(LibraryContext context,IHostingEnvironment appEnvironment)
         {
             _context = context;
+            _appEnvironment = appEnvironment;
         }
 
         // GET: Books
@@ -87,6 +95,7 @@ namespace LibraryCS.Controllers
 
             return View(await PaginatedList<Book>.CreateAsync(books.AsNoTracking(),pageNumber ?? 1,pageSize ?? 5));
         }
+       
 
         // GET: Books/Details/5
         public async Task<IActionResult> Details(int? id)
@@ -119,8 +128,10 @@ namespace LibraryCS.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("NameBook,Author,Description,Edition,Genre,Aviability,BookAddDate")] Book book)
         {
+            
             if (ModelState.IsValid)
             {
+                book.BookPicturesPath = "/Files/noimage.png";
                 _context.Add(book);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -149,7 +160,7 @@ namespace LibraryCS.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("BookID,NameBook,Author,Description,Edition,Genre,Aviability,BookAddDate")] Book book)
+        public async Task<IActionResult> Edit(int id, [Bind("BookID,NameBook,Author,Description,Edition,Genre,Aviability,BookAddDate,BookPicturesPath")] Book book)
         {
             if (id != book.BookID)
             {

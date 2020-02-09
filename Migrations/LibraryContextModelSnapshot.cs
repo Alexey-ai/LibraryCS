@@ -21,7 +21,9 @@ namespace LibraryCS.Migrations
 
             modelBuilder.Entity("LibraryCS.Models.Book", b =>
                 {
-                    b.Property<int>("BookID");
+                    b.Property<int>("BookID")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Author")
                         .IsRequired();
@@ -42,6 +44,29 @@ namespace LibraryCS.Migrations
                     b.HasKey("BookID");
 
                     b.ToTable("Book");
+                });
+
+            modelBuilder.Entity("LibraryCS.Models.FileModel", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int?>("BookID");
+
+                    b.Property<string>("Name");
+
+                    b.Property<string>("Path");
+
+                    b.Property<int?>("ReaderID");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BookID");
+
+                    b.HasIndex("ReaderID");
+
+                    b.ToTable("Files");
                 });
 
             modelBuilder.Entity("LibraryCS.Models.Order", b =>
@@ -94,6 +119,17 @@ namespace LibraryCS.Migrations
                     b.HasKey("ID");
 
                     b.ToTable("Reader");
+                });
+
+            modelBuilder.Entity("LibraryCS.Models.FileModel", b =>
+                {
+                    b.HasOne("LibraryCS.Models.Book")
+                        .WithMany("FileModels")
+                        .HasForeignKey("BookID");
+
+                    b.HasOne("LibraryCS.Models.Reader")
+                        .WithMany("FileModels")
+                        .HasForeignKey("ReaderID");
                 });
 
             modelBuilder.Entity("LibraryCS.Models.Order", b =>
