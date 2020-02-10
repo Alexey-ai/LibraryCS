@@ -126,11 +126,12 @@ namespace LibraryCS.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("NameBook,Author,Description,Edition,Genre,Aviability,BookAddDate")] Book book)
+        public async Task<IActionResult> Create([Bind("NameBook,Author,Description,Edition,Genre,BookAddDate")] Book book)
         {
             
             if (ModelState.IsValid)
             {
+                book.Aviability = true;
                 book.BookPicturesPath = "/Files/noimage.png";
                 _context.Add(book);
                 await _context.SaveChangesAsync();

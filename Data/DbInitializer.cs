@@ -12,11 +12,10 @@ namespace LibraryCS.Data
         {
             context.Database.EnsureCreated();
             {
-                // Look for any movies.
                 if (context.Books.Any() || context.Readers.Any() || context.Orders.Any())
                 {
                     return;   // DB has been seeded
-                }
+                 }
 
                 var Readers = new List<Reader>
             {

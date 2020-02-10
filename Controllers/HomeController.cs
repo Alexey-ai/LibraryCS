@@ -41,5 +41,36 @@ namespace LibraryCS.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
+
+        public IActionResult InitialBase()
+        {
+            if (_context.Books.Any() || _context.Readers.Any())
+            {
+                return Redirect("/Home/Index/");
+            }
+            var Books = new List<Book>
+            {
+            new Book{NameBook="Sobranie sochineniy",Author="Lenin V.I.",Description="Full set of works Lenin",Edition="RED ARMY",Genre="Political",Aviability=true,BookAddDate=DateTime.Parse("2019-12-12"),BookPicturesPath="/Files/noimage.png"},
+            new Book{NameBook="Number the Stars",Author="Lois Lowry",Description="Book about second world war",Edition="RED ARMY",Genre="Drama",Aviability=true,BookAddDate=DateTime.Parse("2019-12-12"),BookPicturesPath="/Files/noimage.png"},
+            new Book{NameBook="Winnie-the-Pooh",Author="A. A. Milne",Description="Fairy tale about bear",Edition="RED ARMY",Genre="Kids book",Aviability=true,BookAddDate=DateTime.Parse("2019-12-12"),BookPicturesPath="/Files/noimage.png"},
+            new Book{NameBook="Northern Lights",Author="Philip Pullman",Description="Fantasy world",Edition="RED ARMY",Genre="Fantasy",Aviability=true,BookAddDate=DateTime.Parse("2019-12-12"),BookPicturesPath="/Files/noimage.png"},
+            new Book{NameBook="Prestuplenie i nakazanie",Author="F.M.Dostoevsky",Description="Roman",Edition="RED ARMY",Genre="Drama",Aviability=true,BookAddDate=DateTime.Parse("2019-12-12"),BookPicturesPath="/Files/noimage.png"}
+            };
+            Books.ForEach(s => _context.Books.Add(s));
+            _context.SaveChanges();
+
+            var Readers = new List<Reader>
+            {
+            new Reader{ReaderName="Alex",ReaderLastName="Ivanov", Age=30, Adress="Kaluga Jukov st.", Phone="8-900-555-2020",Passport="2809-546237", AddDate=DateTime.Parse("2019-10-05"),ReadersPicsPath="/Files/noimage.png"},
+            new Reader{ReaderName="Olga",ReaderLastName="Petrova", Age=22, Adress="Moscow Neglinnaya st.", Phone="8-900-555-1000",Passport="2809-343337", AddDate=DateTime.Parse("2019-11-05"),ReadersPicsPath="/Files/noimage.png"},
+            new Reader{ReaderName="Fu",ReaderLastName="Kim", Age=40, Adress="New York Broadway st.", Phone="8-900-555-6767",Passport="2809-234322", AddDate=DateTime.Parse("2019-12-05"),ReadersPicsPath="/Files/noimage.png"},
+            new Reader{ReaderName="Vasil",ReaderLastName="Johnson", Age=15, Adress="Kaluga Pukhova st.", Phone="8-900-555-2666",Passport="2809-34333", AddDate=DateTime.Parse("2020-01-08"),ReadersPicsPath="/Files/noimage.png"}
+            };
+
+            Readers.ForEach(s => _context.Readers.Add(s));
+            _context.SaveChanges();
+
+            return Redirect("/Home/Index/");
+        }
     }
 }

@@ -24,7 +24,7 @@ namespace LibraryCS
                 try
                 {
                     var context = services.GetRequiredService<LibraryContext>();
-                    DbInitializer.Initialize(context);
+                   // DbInitializer.Initialize(context);
                 }
                 catch (Exception ex)
                 {

@@ -121,13 +121,11 @@ namespace LibraryCS.Controllers
                 return NotFound();
             }
 
-#pragma warning disable CA2007 // Попробуйте вызвать ConfigureAwait для ожидаемой задачи
             var reader = await _context.Readers
                 .Include(s=>s.Orders)
                 .ThenInclude(e=>e.Book)
                 .AsNoTracking()
                 .FirstOrDefaultAsync(m => m.ID == id);
-#pragma warning restore CA2007 // Попробуйте вызвать ConfigureAwait для ожидаемой задачи
             if (reader == null)
             {
                 return NotFound();
@@ -154,6 +152,7 @@ namespace LibraryCS.Controllers
             {
                 if (ModelState.IsValid)
                 {
+                    reader.ReadersPicsPath = "/Files/noimage.png";
                     _context.Add(reader);
                     await _context.SaveChangesAsync();
                     return RedirectToAction(nameof(Index));
@@ -191,7 +190,7 @@ namespace LibraryCS.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ID,ReaderName,ReaderLastName,Age,Adress,Phone,Passport,AddDate")] Reader reader)
+        public async Task<IActionResult> Edit(int id, [Bind("ID,ReaderName,ReaderLastName,Age,Adress,Phone,Passport,AddDate,ReadersPicsPath")] Reader reader)
         {
             if (id != reader.ID)
             {

@@ -67,6 +67,30 @@ namespace LibraryCS.Controllers
             }
             return Redirect(("/Books/Details/"+id.ToString()));
         }
+        public async Task<IActionResult> AddFileToReader(int? id, IFormFile uploadedFile)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            if (uploadedFile != null)
+            {
+                string path = "/Files/" + uploadedFile.FileName;
+                using (var fileStream = new FileStream(_appEnvironment.WebRootPath + path, FileMode.Create))
+                {
+                    await uploadedFile.CopyToAsync(fileStream);
+                }
+                FileModel file = new FileModel { Name = uploadedFile.FileName, Path = path };
+                _context.Files.Add(file);
+                _context.SaveChanges();
+                var reader = await _context.Readers
+                .FirstOrDefaultAsync(r => r.ID == id);
+                reader.ReadersPicsPath = file.Path;
+                _context.Readers.Update(reader);
+                _context.SaveChanges();
+            }
+            return Redirect(("/Readers/Details/" + id.ToString()));
+        }
         // GET: Files/Details/5
         public async Task<IActionResult> Details(int? id)
         {

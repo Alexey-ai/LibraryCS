@@ -20,6 +20,7 @@ namespace LibraryCS.Migrations
                     Edition = table.Column<string>(nullable: true),
                     Genre = table.Column<string>(nullable: true),
                     Aviability = table.Column<bool>(nullable: false),
+                    BookPicturesPath = table.Column<string>(nullable: true),
                     BookAddDate = table.Column<DateTime>(nullable: false)
                 },
                 constraints: table =>
@@ -39,7 +40,8 @@ namespace LibraryCS.Migrations
                     Adress = table.Column<string>(nullable: true),
                     Phone = table.Column<string>(nullable: true),
                     Passport = table.Column<string>(nullable: true),
-                    AddDate = table.Column<DateTime>(nullable: false)
+                    AddDate = table.Column<DateTime>(nullable: false),
+                    ReadersPicsPath = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -54,18 +56,11 @@ namespace LibraryCS.Migrations
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     Name = table.Column<string>(nullable: true),
                     Path = table.Column<string>(nullable: true),
-                    BookID = table.Column<int>(nullable: true),
                     ReaderID = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Files", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Files_Book_BookID",
-                        column: x => x.BookID,
-                        principalTable: "Book",
-                        principalColumn: "BookID",
-                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Files_Reader_ReaderID",
                         column: x => x.ReaderID,
@@ -101,11 +96,6 @@ namespace LibraryCS.Migrations
                         principalColumn: "ID",
                         onDelete: ReferentialAction.Cascade);
                 });
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Files_BookID",
-                table: "Files",
-                column: "BookID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Files_ReaderID",

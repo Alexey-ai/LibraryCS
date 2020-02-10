@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LibraryCS.Migrations
 {
     [DbContext(typeof(LibraryContext))]
-    [Migration("20200207193952_Start")]
+    [Migration("20200210173857_Start")]
     partial class Start
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -34,6 +34,8 @@ namespace LibraryCS.Migrations
 
                     b.Property<DateTime>("BookAddDate");
 
+                    b.Property<string>("BookPicturesPath");
+
                     b.Property<string>("Description");
 
                     b.Property<string>("Edition");
@@ -54,8 +56,6 @@ namespace LibraryCS.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("BookID");
-
                     b.Property<string>("Name");
 
                     b.Property<string>("Path");
@@ -63,8 +63,6 @@ namespace LibraryCS.Migrations
                     b.Property<int?>("ReaderID");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("BookID");
 
                     b.HasIndex("ReaderID");
 
@@ -118,6 +116,8 @@ namespace LibraryCS.Migrations
                         .IsRequired()
                         .HasMaxLength(30);
 
+                    b.Property<string>("ReadersPicsPath");
+
                     b.HasKey("ID");
 
                     b.ToTable("Reader");
@@ -125,10 +125,6 @@ namespace LibraryCS.Migrations
 
             modelBuilder.Entity("LibraryCS.Models.FileModel", b =>
                 {
-                    b.HasOne("LibraryCS.Models.Book")
-                        .WithMany("FileModels")
-                        .HasForeignKey("BookID");
-
                     b.HasOne("LibraryCS.Models.Reader")
                         .WithMany("FileModels")
                         .HasForeignKey("ReaderID");
