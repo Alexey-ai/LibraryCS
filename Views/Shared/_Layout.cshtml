@@ -19,7 +19,7 @@
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
             <div class="container">
                 <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">LibraryCS</a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
@@ -30,22 +30,29 @@
                     <partial name="_LoginPartial" />
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="About">About</a>
+                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="About">About</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Files" asp-action="Index">Files</a>
+                            <a class="nav-link" asp-area="" asp-controller="Files" asp-action="Index">Files</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Books" asp-action="Index">Books</a>
+                            <a class="nav-link" asp-area="" asp-controller="Books" asp-action="Index">Books</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Readers" asp-action="Index">Readers</a>
+                            <a class="nav-link" asp-area="" asp-controller="Readers" asp-action="Index">Readers</a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+                               aria-haspopup="true" aria-expanded="false"  >Orders</a>
+                            <div class="dropdown-menu bg-dark text-light" aria-labelledby="navbarDropDown">
+                                <a class="dropdown-item bg-dark text-light" asp-controller="Orders" asp-action="Create">Add Order</a>
+                                <a class="dropdown-item bg-dark text-light" asp-controller="Orders" asp-action="CloseOrderList">Close Order</a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item bg-success text-light" asp-controller="Orders" asp-action="Index">View all</a>
+                            </div>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Orders" asp-action="Index">Orders</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Accounts">Admin page</a>
+                            <a class="nav-link" asp-area="Identity" asp-page="/Account/Accounts">Admin page</a>
                         </li>
                     </ul>
                 </div>
@@ -59,9 +66,13 @@
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
+    <footer class="text-center">
         <div class="container">
-            &copy; 2020 - Library CS -
+            <div class="row">
+                <div class="col-12">
+                    &copy; 2020 - Library CS -
+                </div>
+                </div>
         </div>
     </footer>
 

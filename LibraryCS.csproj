@@ -17,15 +17,7 @@
 
 
   <ItemGroup>
-    <Content Update="wwwroot\lib\img\book1.jpg">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Update="wwwroot\lib\img\book2.jpg">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Update="wwwroot\lib\img\book3.jpg">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
+    <Folder Include="wwwroot\lib\img\" />
   </ItemGroup>
 
 
