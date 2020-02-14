@@ -15,9 +15,8 @@ namespace LibraryCS.Models
 
         [Required][StringLength(30, MinimumLength = 3)][RegularExpression(@"^[A-Z]+[a-zA-Z""'\s-]*$")]
         public string ReaderLastName { get; set; }
-        
-        [Range(1,100)]
-        public int Age { get; set; }
+        [DataType(DataType.Date)]
+        public DateTime BirthdayDate { get; set; }
         public string Adress { get; set; }
         public string Phone { get; set; }
         public string Passport { get; set; }
@@ -34,6 +33,13 @@ namespace LibraryCS.Models
             get
             {
                 return ID + "--" + ReaderName + "--" + ReaderLastName;
+            }
+        }
+        public int Age 
+        {
+            get
+            {
+                return (DateTime.Now - BirthdayDate).Days / 365; 
             }
         }
     }

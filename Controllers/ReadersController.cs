@@ -81,10 +81,10 @@ namespace LibraryCS.Controllers
                     readers = readers.OrderByDescending(s => s.AddDate);
                     break;
                 case "Age":
-                    readers = readers.OrderBy(s => s.Age);
+                    readers = readers.OrderBy(s => s.BirthdayDate);
                     break;
                 case "age_desc":
-                    readers = readers.OrderByDescending(s => s.Age);
+                    readers = readers.OrderByDescending(s => s.BirthdayDate);
                     break;
                 case "Adress":
                     readers = readers.OrderBy(s => s.Adress);
@@ -146,7 +146,7 @@ namespace LibraryCS.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(
-     [Bind("ReaderName,ReaderLastName,Age,Adress,Phone,Passport,AddDate")] Reader reader)
+     [Bind("ReaderName,ReaderLastName,BirthdayDate,Adress,Phone,Passport,AddDate")] Reader reader)
         {
             try
             {
@@ -190,7 +190,7 @@ namespace LibraryCS.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ID,ReaderName,ReaderLastName,Age,Adress,Phone,Passport,AddDate,ReadersPicsPath")] Reader reader)
+        public async Task<IActionResult> Edit(int id, [Bind("ID,ReaderName,ReaderLastName,BirthdayDate,Adress,Phone,Passport,AddDate,ReadersPicsPath")] Reader reader)
         {
             if (id != reader.ID)
             {
