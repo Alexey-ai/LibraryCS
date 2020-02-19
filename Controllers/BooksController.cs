@@ -106,6 +106,7 @@ namespace LibraryCS.Controllers
             }
 
             var book = await _context.Books
+                .Include(p=>p.Pictures)
                 .FirstOrDefaultAsync(m => m.BookID == id);
             if (book == null)
             {
@@ -214,7 +215,14 @@ namespace LibraryCS.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var book = await _context.Books.FindAsync(id);
+            var book = await _context.Books
+                .Include(p => p.Pictures)
+                .FirstOrDefaultAsync(m => m.BookID == id);
+
+            foreach (PictureModel picture in book.Pictures)
+            {
+                _context.Pictures.Remove(picture);
+            }
             _context.Books.Remove(book);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));

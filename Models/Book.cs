@@ -26,7 +26,7 @@ namespace LibraryCS.Models
         public DateTime BookAddDate { get; set; }
         public ICollection<Order> Order { get; set; }
 
-        //public List<PictureModel> Pictures { get; set; }
+        public List<PictureModel> Pictures { get; set; } = new List<PictureModel>();
 
         public string FullName
         {

@@ -91,6 +91,29 @@ namespace LibraryCS.Controllers
             }
             return Redirect(("/Readers/Details/" + id.ToString()));
         }
+
+        public async Task<IActionResult> AddPictureToBook(int? id, IFormFile uploadedFile)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            if (uploadedFile != null)
+            {
+                string path = "/Files/" + uploadedFile.FileName;
+                using (var fileStream = new FileStream(_appEnvironment.WebRootPath + path, FileMode.Create))
+                {
+                    await uploadedFile.CopyToAsync(fileStream);
+                }
+                PictureModel picture = new PictureModel { Name = uploadedFile.FileName, Path = path };
+                var book = await _context.Books
+                .FirstOrDefaultAsync(b => b.BookID == id);
+                book.Pictures.Add(picture);
+                _context.Books.Update(book);
+                _context.SaveChanges();
+            }
+            return Redirect(("/Books/Details/" + id.ToString()));
+        }
         // GET: Files/Details/5
         public async Task<IActionResult> Details(int? id)
         {
