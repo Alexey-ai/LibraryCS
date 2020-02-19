@@ -92,7 +92,7 @@
 </div>
 <p><img src="@Url.Content(Model.ReadersPicsPath)"></p>
 
-<form asp-action="AddFileToReader" asp-route-id="@Model.ID" asp-controller="Files" method="post" enctype="multipart/form-data">
+<form asp-action="AddFileToReader" asp-route-id="@Model.ID" asp-controller="Pictures" method="post" enctype="multipart/form-data">
     <input type="file" name="uploadedFile" /><br>
     <input type="submit" value="Change" />
 </form>

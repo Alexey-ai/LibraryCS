@@ -14,13 +14,14 @@ namespace LibraryCS.Data
         public DbSet<Book> Books { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<Reader> Readers { get; set; }
-        public DbSet<FileModel> Files { get; set; }
+        public DbSet<PictureModel> Pictures { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Book>().ToTable("Book");
             modelBuilder.Entity<Order>().ToTable("Order");
-            modelBuilder.Entity<Reader>().ToTable("Reader");           
+            modelBuilder.Entity<Reader>().ToTable("Reader");
+            modelBuilder.Entity<PictureModel>().ToTable("Pictures");
         }
     }
 }

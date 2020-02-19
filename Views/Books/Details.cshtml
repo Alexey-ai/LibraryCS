@@ -55,7 +55,7 @@
 </div>
 <p><img src="@Url.Content(Model.BookPicturesPath)"></p>
 
-<form asp-action="AddFileToBook" asp-route-id="@Model.BookID" asp-controller="Files" method="post" enctype="multipart/form-data">
+<form asp-action="AddFileToBook" asp-route-id="@Model.BookID" asp-controller="Pictures" method="post" enctype="multipart/form-data">
     <input type="file" name="uploadedFile" /><br>
     <input type="submit" value="Change" />
 </form>

@@ -25,8 +25,6 @@ namespace LibraryCS.Models
         public string ReadersPicsPath { get; set; }
         public ICollection<Order> Orders { get; set; }
 
-        public ICollection<FileModel> FileModels { get; set; }
-
         [Display(Name ="Full Name")]
         public string FullName
         {

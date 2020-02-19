@@ -1,9 +1,9 @@
-﻿@model IEnumerable<LibraryCS.Models.FileModel>
+﻿@model IEnumerable<LibraryCS.Models.PictureModel>
 @{
     ViewData["Title"] = "Добавление файла";
 }
 <h3>Выберите файл для загрузки</h3>
-<form asp-action="AddFile" asp-controller="Books" method="post" enctype="multipart/form-data">
+<form asp-action="AddFile" asp-controller="Pictures" method="post" enctype="multipart/form-data">
     <input type="file" name="uploadedFile" /><br>
     <input type="submit" value="Загрузить" />
 </form>
@@ -11,5 +11,10 @@
 <h3>Все файлы</h3>
 @foreach (var f in Model)
 {
+<div>
     <p><img src="@Url.Content(f.Path)"></p>
-}
+
+        <a asp-action="Details" asp-route-id="@f.Id">Детали</a> |
+        <a asp-action="Delete" asp-route-id="@f.Id">Удалить</a>
+</div>
+        }

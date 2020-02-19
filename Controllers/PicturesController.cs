@@ -12,19 +12,19 @@ using Microsoft.EntityFrameworkCore;
 
 namespace LibraryCS.Controllers
 {
-    public class FilesController : Controller
+    public class PicturesController : Controller
     {
         private readonly LibraryContext _context;
         private IHostingEnvironment _appEnvironment;
 
-        public FilesController(LibraryContext context, IHostingEnvironment appEnvironment)
+        public PicturesController(LibraryContext context, IHostingEnvironment appEnvironment)
         {
             _context = context;
             _appEnvironment = appEnvironment;
         }
         public IActionResult Index()
         {
-            return View(_context.Files.ToList());
+            return View(_context.Pictures.ToList());
         }
         [HttpPost]
         public async Task<IActionResult> AddFile(IFormFile uploadedFile)
@@ -36,8 +36,8 @@ namespace LibraryCS.Controllers
                 {
                     await uploadedFile.CopyToAsync(fileStream);
                 }
-                FileModel file = new FileModel { Name = uploadedFile.FileName, Path = path };
-                _context.Files.Add(file);
+                PictureModel picture = new PictureModel { Name = uploadedFile.FileName, Path = path };
+                _context.Pictures.Add(picture);
                 _context.SaveChanges();
             }
             return RedirectToAction("Index");
@@ -56,12 +56,12 @@ namespace LibraryCS.Controllers
                 {
                     await uploadedFile.CopyToAsync(fileStream);
                 }
-                FileModel file = new FileModel { Name = uploadedFile.FileName, Path = path };
-                _context.Files.Add(file);
+                PictureModel picture = new PictureModel { Name = uploadedFile.FileName, Path = path };
+                _context.Pictures.Add(picture);
                 _context.SaveChanges();
                 var book = await _context.Books
                 .FirstOrDefaultAsync(b => b.BookID == id);
-                book.BookPicturesPath = file.Path;
+                book.BookPicturesPath = picture.Path;
                 _context.Books.Update(book);
                 _context.SaveChanges();
             }
@@ -80,12 +80,12 @@ namespace LibraryCS.Controllers
                 {
                     await uploadedFile.CopyToAsync(fileStream);
                 }
-                FileModel file = new FileModel { Name = uploadedFile.FileName, Path = path };
-                _context.Files.Add(file);
+                PictureModel picture = new PictureModel { Name = uploadedFile.FileName, Path = path };
+                _context.Pictures.Add(picture);
                 _context.SaveChanges();
                 var reader = await _context.Readers
                 .FirstOrDefaultAsync(r => r.ID == id);
-                reader.ReadersPicsPath = file.Path;
+                reader.ReadersPicsPath = picture.Path;
                 _context.Readers.Update(reader);
                 _context.SaveChanges();
             }
@@ -99,7 +99,7 @@ namespace LibraryCS.Controllers
                 return NotFound();
             }
 
-            var file = await _context.Files
+            var file = await _context.Pictures
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (file == null)
             {
@@ -116,7 +116,7 @@ namespace LibraryCS.Controllers
                 return NotFound();
             }
 
-            var file = await _context.Files
+            var file = await _context.Pictures
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (file == null)
             {
@@ -131,8 +131,8 @@ namespace LibraryCS.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var file = await _context.Files.FindAsync(id);
-            _context.Files.Remove(file);
+            var file = await _context.Pictures.FindAsync(id);
+            _context.Pictures.Remove(file);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }

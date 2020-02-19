@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace LibraryCS.Models
 {
-    public class FileModel
+    public class PictureModel
     {
         public int Id { get; set; }
         public string Name { get; set; }
